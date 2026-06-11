@@ -78,7 +78,8 @@ from utilities import load_pretrained_model
 net = load_pretrained_model(
     model=model,
     w_path=w_path,
-    n_classes=n_classes
+    n_classes=n_classes,
+    input_dim=input_dim
 )
 ```
 
@@ -89,8 +90,9 @@ from utilities import load_ACS_pretrained_model
 
 net = load_ACS_pretrained_model(
     model=model,
-    config=config,
-    w_path=w_path
+    w_path=w_path,
+    n_classes=n_classes,
+    input_dim=input_dim
 )
 ```
 

@@ -47,7 +47,7 @@ def finetuning(config, model, w_path, data_path, saver_path, all_results=None):
     saving_log.write('Total number of validation files {}\n'.format(len(val_files)))
 
     # LOAD THE MODEL
-    net = load_ACS_pretrained_model(model, config, w_path)
+    net = load_ACS_pretrained_model(model, w_path, config.n_classes, config.input_dim)
 
     # Create Trainer and start training
     trainer = Trainer(

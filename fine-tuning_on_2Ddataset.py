@@ -55,7 +55,7 @@ def finetuning(config, model, w_path, data_path, saver_path, all_results=None):
     saving_log.write('Total number of training files {}\n'.format(len(train_files)))
     saving_log.write('Total number of validation files {}\n'.format(len(val_files)))
 
-    net = load_pretrained_model(model, w_path, config.n_classes)
+    net = load_pretrained_model(model, w_path, config.n_classes, config.input_dim)
 
     # freeze first layer
     next(net.parameters()).requires_grad = False

@@ -37,7 +37,7 @@ def create_next_exp_folder(base_directory):
         print(f"Created folder: {new_folder}")
     return new_folder
 
-def load_pretrained_model(model, w_path, nclasses):
+def load_pretrained_model(model, w_path, nclasses, input_dim=128):
     pretrained_dict = torch.load(w_path)
     if model == 'resnet18':
         from torchvision.models import resnet18
@@ -56,7 +56,7 @@ def load_pretrained_model(model, w_path, nclasses):
         model_2d.fc = torch.nn.Linear(2048, nclasses)
     elif model == 'ADnet':
         from models import CNN_8CL_2D, CNN_2D
-        net_config = CNN_8CL_2D()
+        net_config = CNN_8CL_2D(input_dim)
         model_2d = CNN_2D(net_config)
         pretrained_dict = {k: v for k, v in pretrained_dict.items() if 'f' not in k}
         model_2d.f[-1] = torch.nn.Linear(256, nclasses)
@@ -67,24 +67,24 @@ def load_pretrained_model(model, w_path, nclasses):
     return model_2d
 
 
-def load_ACS_pretrained_model(model, config, w_path):
+def load_ACS_pretrained_model(model, w_path, n_classes, input_dim=128):
     pretrained_dict = torch.load(w_path)
     if 'ADnet' in model:
         from models import CNN_8CL_2D, CNN_2D
-        net_config = CNN_8CL_2D(config.input_dim)
+        net_config = CNN_8CL_2D(input_dim)
         model_2d = CNN_2D(net_config)
         pretrained_dict = {k: v for k, v in pretrained_dict.items() if 'f' not in k}
-        model_2d.f[-1] = torch.nn.Linear(64, config.n_classes)
+        model_2d.f[-1] = torch.nn.Linear(64, n_classes)
     else:
         if model == 'resnet18':
             from torchvision.models import resnet18, ResNet18_Weights
             model_2d = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
-            model_2d.fc = torch.nn.Linear(512, config.n_classes)
+            model_2d.fc = torch.nn.Linear(512, n_classes)
             pretrained_dict = {k: v for k, v in pretrained_dict.items() if 'fc' not in k}
         elif model == 'resnet50':
             from torchvision.models import resnet50, ResNet50_Weights
             model_2d = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
-            model_2d.fc = torch.nn.Linear(2048, config.n_classes)
+            model_2d.fc = torch.nn.Linear(2048, n_classes)
             pretrained_dict = {k: v for k, v in pretrained_dict.items() if 'fc' not in k}
         else:
             print('Model not found. Please select a model among: ADnet, ADnet_extractor, Resnet18,'
